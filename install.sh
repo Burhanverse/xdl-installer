@@ -41,6 +41,8 @@ if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
     echo -e "${YELLOW}Adding $INSTALL_DIR to your PATH...${RESET}"
     echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
     source "$HOME/.bashrc"
+    echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.zshrc"
+    source "$HOME/.zshrc"
     echo -e "${GREEN}$INSTALL_DIR added to PATH.${RESET}"
 else
     echo -e "${GREEN}$INSTALL_DIR is already in PATH.${RESET}"
