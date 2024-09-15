@@ -154,6 +154,15 @@ apkDL() {
     curl -L "$APK_URL" -o "$APK_FILE" --progress-bar
 }
 
+installMore() {
+    read -p "Do you want to install more apps? (y/n): " choice
+    case "$choice" in
+        [Yy]* ) fetchRepos; apkFetch; apkDL; updateProps; if isRooted; then inRooted; else nonRooted; fi; cleanUp; installMore;;
+        [Nn]* ) echo -e "${YELLOW}Exiting...${RESET}"; exit 0;;
+        * ) echo -e "${RED}Invalid choice. Exiting...${RESET}"; exit 1;;
+    esac
+}
+
 confirmContinue
 installPkgs
 fetchRepos
@@ -166,4 +175,5 @@ else
     nonRooted
 fi
 cleanUp
+installMore
 revertProps
