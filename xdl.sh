@@ -9,7 +9,7 @@ YELLOW='\033[0;33m'
 RESET='\033[0m'
 
 REQUIRED_PKGS=("jq" "curl")
-REPO_JSON_URL="https://raw.githubusercontent.com/Burhanverse/assets/main/repos.json"
+REPO_JSON_URL="https://raw.githubusercontent.com/Burhanverse/xdl-installer/main/repos.json"
 
 confirmContinue() {
     echo -e "${YELLOW}XDL is made possible by Aqua (@burhanverse)${RESET}"
