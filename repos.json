@@ -4,6 +4,18 @@
         "repo": "crimera/twitter-apk"
     },
     {
+        "name": "ProtonVPN",
+        "repo": "ProtonVPN/android-app"
+    },
+    {
+        "name": "ProtonPass",
+        "repo": "protonpass/android-pass"
+    },
+    {
+        "name": "Aegis Authenticator",
+        "repo": "beemdevelopment/Aegis"
+    },
+    {
         "name": "Lawnchair (Original)",
         "repo": "LawnchairLauncher/lawnchair"
     },
