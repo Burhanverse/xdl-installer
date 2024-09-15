@@ -22,5 +22,17 @@
     {
         "name": "Lawnchair (Goooler)",
         "repo": "Goooler/LawnchairRelease"
+    },
+    {
+        "name": "Dantotsu",
+        "repo": "rebelonion/Dantotsu"
+    },
+    {
+        "name": "Mihon",
+        "repo": "mihonapp/mihon"
+    },
+    {
+        "name": "App Manager",
+        "repo": "MuntashirAkon/AppManager"
     }
 ]
