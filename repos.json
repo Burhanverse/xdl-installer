@@ -20,6 +20,10 @@
         "repo": "protonpass/android-pass"
     },
     {
+        "name": "ProtonMail",
+        "repo": "ProtonMail/android-mail"
+    },
+    {
         "name": "Aegis Authenticator",
         "repo": "beemdevelopment/Aegis"
     },
