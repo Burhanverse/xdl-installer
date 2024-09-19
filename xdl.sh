@@ -125,7 +125,6 @@ apkFetch() {
     RELEASE_NAME=$(echo "$RELEASE_JSON" | grep -Po '"tag_name": "\K.*?(?=")')
     echo -e "${GREEN}Latest Release: $RELEASE_NAME${RESET}"
 
-    # Fetch the release notes/description
     RELEASE_NOTES=$(echo "$RELEASE_JSON" | jq -r '.body')
     if [ -n "$RELEASE_NOTES" ]; then
         echo -e "${YELLOW}What's new in $RELEASE_NAME:${RESET}"
@@ -147,16 +146,28 @@ apkDL() {
         APK_FILES+=("$(basename "$URL")")
     done
 
-    echo -e "${YELLOW}Select an APK to download:${RESET}"
+    echo -e "${YELLOW}Select an APK to download (or press Enter to go back to the repository list):${RESET}"
+    
     for i in "${!APK_FILES[@]}"; do
         echo -e "${BLUE}$((i + 1))) ${CYAN}${APK_FILES[i]}${RESET}"
     done
-
+    
+    echo -e "${GREEN}Press ENTER KEY to go back to main menu.${RESET}"
     echo -e "${BLUE}Enter your choice: ${RESET}"
     read -r choice
+    
+    if [ -z "$choice" ]; then
+        echo -e "${YELLOW}Returning to repository list...${RESET}"
+        fetchRepos
+        apkFetch
+        apkDL
+        return
+    fi
+
     if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#APK_FILES[@]}" ]; then
         echo -e "${RED}Invalid selection. Please try again.${RESET}"
-        exit 1
+        apkDL
+        return
     fi
 
     APK_FILE="${APK_FILES[$((choice - 1))]}"
