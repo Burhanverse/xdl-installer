@@ -4,6 +4,7 @@
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+LAVENDER='\033[1;35m'
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
 RESET='\033[0m'
@@ -120,8 +121,19 @@ cleanUp() {
 apkFetch() {
     echo -e "${CYAN}Fetching latest release information...${RESET}"
     RELEASE_JSON=$(curl -s https://api.github.com/repos/$REPO/releases/latest)
+
     RELEASE_NAME=$(echo "$RELEASE_JSON" | grep -Po '"tag_name": "\K.*?(?=")')
     echo -e "${GREEN}Latest Release: $RELEASE_NAME${RESET}"
+
+    # Fetch the release notes/description
+    RELEASE_NOTES=$(echo "$RELEASE_JSON" | jq -r '.body')
+    if [ -n "$RELEASE_NOTES" ]; then
+        echo -e "${YELLOW}What's new in $RELEASE_NAME:${RESET}"
+        echo -e "${LAVENDER}$RELEASE_NOTES${RESET}"
+    else
+        echo -e "${RED}No release notes available for $RELEASE_NAME.${RESET}"
+    fi
+
     APK_URLS=$(echo "$RELEASE_JSON" | grep -Po '"browser_download_url": "\K.*?\.apk(?=")')
     if [ -z "$APK_URLS" ]; then
         echo -e "${RED}No APK files found in the latest release.${RESET}"
