@@ -55,20 +55,58 @@ fetchRepos() {
         exit 1
     fi
 
-    echo -e "${YELLOW}Select a repository source:${RESET}"
-    for i in "${!NAMES[@]}"; do
-        echo -e "${BLUE}$((i + 1))) ${CYAN}${NAMES[i]}${RESET}"
+    page=1
+    per_page=9
+
+    while true; do
+        clear
+        start=$(( (page - 1) * per_page ))
+        end=$(( start + per_page ))
+        total_pages=$(( (${#NAMES[@]} + per_page - 1) / per_page ))
+
+        echo -e "${YELLOW}Select a repository source (Page $page/$total_pages):${RESET}"
+
+        for i in $(seq $start $(( end - 1 ))); do
+            if [ $i -ge ${#NAMES[@]} ]; then
+                break
+            fi
+            echo -e "${BLUE}$((i - start + 1))) ${CYAN}${NAMES[i]}${RESET}"
+        done
+
+        if [ $page -lt $total_pages ]; then
+            echo -e "${BLUE}0) Next Page${RESET}"
+        fi
+        if [ $page -gt 1 ]; then
+            echo -e "${BLUE}00) Previous Page${RESET}"
+        fi
+
+        echo -e "${BLUE}Enter your choice: ${RESET}"
+        read -r choice
+
+        if [[ "$choice" == "00" ]] && [ $page -gt 1 ]; then
+            page=$((page - 1))
+            continue
+        fi
+
+        if [[ "$choice" == "0" ]] && [ $page -lt $total_pages ]; then
+            page=$((page + 1))
+            continue
+        fi
+
+        if ! [[ "$choice" =~ ^[0-9]+$ ]]; then
+            echo -e "${RED}Invalid selection. Please try again.${RESET}"
+            continue
+        fi
+
+        index=$((start + choice - 1))
+        if [ "$choice" -gt 0 ] && [ "$index" -lt "${#NAMES[@]}" ]; then
+            REPO="${REPOS[$index]}"
+            echo -e "${GREEN}Selected repository: $REPO${RESET}"
+            break
+        else
+            echo -e "${RED}Invalid selection. Please try again.${RESET}"
+        fi
     done
-
-    echo -e "${BLUE}Enter your choice: ${RESET}"
-    read -r choice
-    if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#NAMES[@]}" ]; then
-        echo -e "${RED}Invalid selection. Please try again.${RESET}"
-        exit 1
-    fi
-
-    REPO="${REPOS[$((choice - 1))]}"
-    echo -e "${GREEN}Selected repository: $REPO${RESET}"
 }
 
 updateProps() {
