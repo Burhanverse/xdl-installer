@@ -11,7 +11,7 @@ SCRIPT_NAME="xdl"
 INSTALL_DIR="/data/data/com.termux/files/usr/bin"
 
 echo -e "${YELLOW}Downloading the script from GitHub...${RESET}"
-curl -L "$REPO_URL" -o "$INSTALL_DIR/$SCRIPT_NAME"
+curl -sSL "$REPO_URL" -o "$INSTALL_DIR/$SCRIPT_NAME"
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to download the script.${RESET}"
     exit 1
