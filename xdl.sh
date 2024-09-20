@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Define text colors
+width=$(tput cols)
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
@@ -12,9 +12,17 @@ RESET='\033[0m'
 REQUIRED_PKGS=("jq" "curl")
 REPO_JSON_URL="https://raw.githubusercontent.com/Burhanverse/xdl-installer/main/repos.json"
 
+line=$(printf '%*s' "$width" '' | tr ' ' '=')
+
+center_text() {
+  local text="$1"
+  local text_length=${#text}
+  local padding=$((($width - $text_length) / 2))
+  printf "%${padding}s%s\n" "" "$text"
+}
+
 confirmContinue() {
-    echo -e "${YELLOW}XDL is made possible by Aqua (@burhanverse)${RESET}"
-    read -p "Do you want to continue ? (y/n): " choice
+    read -p "Do you want to continue? (y/n): " choice
     case "$choice" in
         [Yy]* ) ;;
         [Nn]* ) echo -e "${YELLOW}Exiting...${RESET}"; exit 0;;
@@ -63,6 +71,24 @@ fetchRepos() {
         start=$(( (page - 1) * per_page ))
         end=$(( start + per_page ))
         total_pages=$(( (${#NAMES[@]} + per_page - 1) / per_page ))
+        
+        echo -e "${CYAN}${line}${RESET}"
+        echo -e "${GREEN}"
+        center_text "        ______   _       "
+        center_text "|\     /|(  __  \ ( \      "
+        center_text "( \   / )| (  \  )| (      "
+        center_text " \ (_) / | |   ) || |      "
+        center_text "  ) _ (  | |   | || |      "
+        center_text " / ( ) \ | |   ) || |      "
+        center_text "( /   \ )| (__/  )| (____/\\"
+        center_text "|/     \|(______/ (_______/ "
+        echo -e "${RESET}"
+        
+        echo -e "${CYAN}${line}${RESET}"
+        echo -e "${YELLOW}Source code available at:${RESET} ${BLUE}https://github.com/Burhanverse/xdl-installer${RESET}"
+        echo -e "${YELLOW}Created by: Aqua (@burhanverse)${RESET}"
+        echo -e "${CYAN}${line}${RESET}"
+
 
         echo -e "${YELLOW}Select a repository source (Page $page/$total_pages):${RESET}"
 
@@ -83,11 +109,13 @@ fetchRepos() {
         echo -e "${BLUE}Enter your choice: ${RESET}"
         read -r choice
 
+        # If choice is '00' and we are not on the first page, go back
         if [[ "$choice" == "00" ]] && [ $page -gt 1 ]; then
             page=$((page - 1))
             continue
         fi
 
+        # If choice is '0' and we are not on the last page, go forward
         if [[ "$choice" == "0" ]] && [ $page -lt $total_pages ]; then
             page=$((page + 1))
             continue
