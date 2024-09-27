@@ -42,5 +42,9 @@
     {
         "name": "App Manager",
         "repo": "MuntashirAkon/AppManager"
+    },
+    {
+        "name": "NetGuard",
+        "repo": "M66B/NetGuard"
     }
 ]
