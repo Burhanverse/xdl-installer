@@ -183,10 +183,12 @@ apkSave() {
             echo -e "${GREEN}APK file saved to $DEST_DIR.${RESET}"
             ;;
         [Nn]* ) 
-            echo -e "${YELLOW}APK file not saved.${RESET}"
+            rm -rf "$APK_FILE"
+            echo -e "${YELLOW}APK file deleted.${RESET}"
             ;;
         * ) 
-            echo -e "${RED}Invalid choice. APK file not saved.${RESET}"
+            rm -rf "$APK_FILE"
+            echo -e "${RED}Invalid choice. APK file deleted.${RESET}"
             ;;
     esac
 }
