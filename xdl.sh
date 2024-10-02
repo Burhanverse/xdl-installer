@@ -151,23 +151,13 @@ revertProps() {
     termux-reload-settings
 }
 
-isRooted() {
+isRoot() {
     command -v su &> /dev/null && su -c 'exit' &> /dev/null
 }
 
-inRooted() {
+Rooted() {
     echo -e "${CYAN}Installing $APK_FILE silently (rooted device)...${RESET}"
     su -c "pm install -r $APK_FILE"
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Installation completed successfully!${RESET}"
-    else
-        echo -e "${RED}Silent installation failed.${RESET}"
-    fi
-}
-
-nonRooted() {
-    echo -e "${CYAN}Installing $APK_FILE (normal install)...${RESET}"
-    termux-open "$APK_FILE"
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}Installation completed successfully!${RESET}"
     else
@@ -175,12 +165,29 @@ nonRooted() {
     fi
 }
 
-cleanUp() {
-    read -p "Do you want to delete the APK file? (y/n): " choice
+nonRoot() {
+    echo -e "${CYAN}Installing $APK_FILE (normal install)...${RESET}"
+    termux-open "$APK_FILE"
+}
+
+apkSave() {
+    read -p "Save the APK file to internal storage? (y/n): " choice
     case "$choice" in
-        [Yy]* ) rm "$APK_FILE"; echo -e "${GREEN}APK file removed.${RESET}";;
-        [Nn]* ) echo -e "${YELLOW}APK file not removed.${RESET}";;
-        * ) echo -e "${RED}Invalid choice. APK file not removed.${RESET}";;
+        [Yy]* ) 
+            DEST_DIR="/storage/emulated/0/Download/XDL"
+            if [ ! -d "$DEST_DIR" ]; then
+                mkdir -p "$DEST_DIR"
+                echo -e "${GREEN}Directory XDL created in Download.${RESET}"
+            fi
+            mv "$APK_FILE" "$DEST_DIR/"
+            echo -e "${GREEN}APK file saved to $DEST_DIR.${RESET}"
+            ;;
+        [Nn]* ) 
+            echo -e "${YELLOW}APK file not saved.${RESET}"
+            ;;
+        * ) 
+            echo -e "${RED}Invalid choice. APK file not saved.${RESET}"
+            ;;
     esac
 }
 
@@ -258,11 +265,11 @@ fetchRepos
 apkFetch
 apkDL
 updateProps
-if isRooted; then
-    inRooted
+if isRoot; then
+    Rooted
 else
-    nonRooted
+    nonRoot
 fi
-cleanUp
+apkSave
 installMore
 revertProps
